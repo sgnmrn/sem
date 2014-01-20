@@ -9,6 +9,7 @@ import httplib2
 #
 listadocumenti = []
 debug = False
+document = 'http://www.di.unito.it/~goy/'
 
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
@@ -23,9 +24,11 @@ class MyHTMLParser(HTMLParser):
         if tag == 'a':
             if debug:
                 print 'trovata tag  a'
-            primoelem = attrs[0]
+            for att in attrs:
+                if att[0] == 'href':
+                    listadocumenti.append(att[1])
             if debug:
-                print primoelem[0], ' ', primoelem[1]
+                print attrs[0]
           #  exit()
         if tag == 'img':
             if debug:
@@ -64,16 +67,20 @@ parser = MyHTMLParser()
 
 #parser.feed('<img src="python-logo.png" alt="The Python logo">')
 
-filehandle = urllib.urlopen('http://www.di.unito.it/~giovanna/')#
-#filehandle = urllib.urlopen('http://www.gulliver.it/home/index.html')
-
-
+filehandle = urllib.urlopen(document)
 contenuto = filehandle.read()
 print 'input length = ', len(contenuto)
 parser.feed(contenuto)
-print 'lista documenti collegati a:' +'http://www.di.unito.it/~giovanna/'
+print 'lista documenti collegati a:' +document +'\n\n'
 for elem in    listadocumenti:
     print elem
-
+#DDDDDDDDDDDDDDDDDDDDDDDD
 filehandle.close()
 
+print '\n\ndocumenti da file pdf convertito a html\n'
+listadocumenti = []
+with open ("/home/marino/PycharmProjects/sem/samples/provahtml.html", "r") as myfile:
+    data=myfile.read()
+    parser.feed(data)
+for elem in    listadocumenti:
+    print elem
